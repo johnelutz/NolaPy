@@ -1,3 +1,10 @@
+"""
+This module creates a Card class, Deck class, Player class,
+and Game class to simulate a simple game of cards.
+Two players are created and dealt hands of three cards,
+which are scored according to the traditional ranks,
+Ace high, and scores assigned to the suits.
+"""
 import random
 
 class Card:
@@ -10,28 +17,28 @@ class Card:
         """give numeric values to each suit"""
         if suit == "Clubs":
             return 4
-        elif suit == "Hearts":
+        if suit == "Hearts":
             return 3
-        elif suit == "Diamonds":
+        if suit == "Diamonds":
             return 2
         else:
             return 1
-        
+
     def rankValue(self, rank):
         """give numeric values to each rank card, including faces"""
         if rank == "T":
             return 10
-        elif rank == "J":
+        if rank == "J":
             return 11
-        elif rank == "Q":
+        if rank == "Q":
             return 12
-        elif rank == "K":
+        if rank == "K":
             return 13
-        elif rank == "A":
+        if rank == "A":
             return 14
         else:
             return int(rank)
-        
+
     def show(self):
         """show the individual card"""
         print('{} of {}'.format(self.rank, self.suit))
@@ -50,14 +57,14 @@ class Deck:
 
     def shuffle(self):
         """Shuffle the deck"""
-        for i in range(len(self.cards) - 1, 0, -1):
-            r = random.randint(0, i)
-            self.cards[i], self.cards[r] = self.cards[r], self.cards[i]
+        for card in range(len(self.cards) - 1, 0, -1):
+            rand_card = random.randint(0, card)
+            self.cards[card], self.cards[rand_card] = self.cards[rand_card], self.cards[card]
 
     def show(self):
         """Display a card from the deck"""
-        for c in self.cards:
-            c.show()
+        for card in self.cards:
+            card.show()
 
     def draw(self):
         """Draw a single card from the top of the deck"""
@@ -68,6 +75,7 @@ class Player:
     def __init__(self, name):
         self.name = name
         self.hand = []
+        self.myValList = []
 
     def drawHand(self, deck):
         """Each player builds a hand by drawing cards from the deck"""
@@ -81,7 +89,7 @@ class Player:
 
     def handValue(self):
         """Calculate the value of the hand using the rules"""
-        self.myValList = []
+        #self.myValList = []
         for card in self.hand:
             myVal = card.suitValue(card.suit) + card.rankValue(card.rank)
             self.myValList.append(myVal)
@@ -95,19 +103,19 @@ class Game:
     def playGame(self):
         """A simulation of the game, two players each drawing three cards"""
         gameDeck = Deck()
-        P1 = Player("P1")
-        P2 = Player("P2")
+        player_one = Player("P1")
+        player_two = Player("P2")
         gameDeck.shuffle()
         for h in range(3):
-            P1.drawHand(gameDeck)
-            P2.drawHand(gameDeck)
-        P1Val = P1.handValue()
-        P2Val = P2.handValue()
+            player_one.drawHand(gameDeck)
+            player_two.drawHand(gameDeck)
+        P1Val = player_one.handValue()
+        P2Val = player_two.handValue()
         print("Player 1's hand is: ")
-        P1.showHand()
+        player_one.showHand()
         print("Player 1's hand is worth " + str(P1Val) + " points.")
         print("Player 2's hand is: ")
-        P2.showHand()
+        player_two.showHand()
         print("Player 2's hand is worth " + str(P2Val) + " points.")
         if P1Val > P2Val:
             print("Player 1 wins!")
@@ -115,7 +123,6 @@ class Game:
             print("Player 2 wins!")
         else:
             print("It's a tie!")
- 
 
 def main():
     game = Game()

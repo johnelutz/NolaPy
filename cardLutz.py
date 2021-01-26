@@ -13,35 +13,34 @@ class Card:
         self.suit = suit
         self.rank = rank
 
-    def suitValue(self, suit):
+    def suit_value(self, suit):
         """give numeric values to each suit"""
-        if suit == "Clubs":
+        if self.suit == "Clubs":
             return 4
-        if suit == "Hearts":
+        if self.suit == "Hearts":
             return 3
-        if suit == "Diamonds":
+        if self.suit == "Diamonds":
             return 2
-        else:
-            return 1
+        return 1
 
-    def rankValue(self, rank):
+    def rank_value(self, rank):
         """give numeric values to each rank card, including faces"""
-        if rank == "T":
+        if self.rank == "T":
             return 10
-        if rank == "J":
+        if self.rank == "J":
             return 11
-        if rank == "Q":
+        if self.rank == "Q":
             return 12
-        if rank == "K":
+        if self.rank == "K":
             return 13
-        if rank == "A":
+        if self.rank == "A":
             return 14
-        else:
-            return int(rank)
+        return int(rank)
 
     def show(self):
         """show the individual card"""
-        print('{} of {}'.format(self.rank, self.suit))
+        self.format_hand = f"{self.rank} of {self.suit}"
+        print(self.format_hand)
 
 class Deck:
     """A class that represents a traditional deck of cards"""
@@ -51,9 +50,9 @@ class Deck:
 
     def build(self):
         """Build the deck of 52 cards"""
-        for s in ['Clubs','Hearts','Diamonds','Spades']:
-            for r in ['2','3','4','5','6','7','8','9','T','J','Q','K','A']:
-                self.cards.append(Card(s, r))
+        for hand_suit in ['Clubs','Hearts','Diamonds','Spades']:
+            for hand_rank in ['2','3','4','5','6','7','8','9','T','J','Q','K','A']:
+                self.cards.append(Card(hand_suit, hand_rank))
 
     def shuffle(self):
         """Shuffle the deck"""
@@ -75,58 +74,57 @@ class Player:
     def __init__(self, name):
         self.name = name
         self.hand = []
-        self.myValList = []
+        self.my_val_list = []
 
-    def drawHand(self, deck):
+    def draw_hand(self, deck):
         """Each player builds a hand by drawing cards from the deck"""
         self.hand.append(deck.draw())
         return self
 
-    def showHand(self):
+    def show_hand(self):
         """Display the cards in the hand"""
         for card in self.hand:
             card.show()
 
-    def handValue(self):
+    def hand_value(self):
         """Calculate the value of the hand using the rules"""
-        #self.myValList = []
+        #self.my_val_list = []
         for card in self.hand:
-            myVal = card.suitValue(card.suit) + card.rankValue(card.rank)
-            self.myValList.append(myVal)
-        return sum(self.myValList)
+            my_val = card.suit_value(card.suit) + card.rank_value(card.rank)
+            self.my_val_list.append(my_val)
+        return sum(self.my_val_list)
 
 class Game:
     """A class that allows the game to be simulated"""
     def __init__(self):
-        pass
+        self.deck = Deck()
+        self.player_one = Player("P1")
+        self.player_two = Player("P2")
 
-    def playGame(self):
+    def play_game(self):
         """A simulation of the game, two players each drawing three cards"""
-        gameDeck = Deck()
-        player_one = Player("P1")
-        player_two = Player("P2")
-        gameDeck.shuffle()
-        for h in range(3):
-            player_one.drawHand(gameDeck)
-            player_two.drawHand(gameDeck)
-        P1Val = player_one.handValue()
-        P2Val = player_two.handValue()
+        self.deck.shuffle()
+        for hand in range(3):
+            self.player_one.draw_hand(self.deck)
+            self.player_two.draw_hand(self.deck)
+        p1_val = self.player_one.hand_value()
+        p2_val = self.player_two.hand_value()
         print("Player 1's hand is: ")
-        player_one.showHand()
-        print("Player 1's hand is worth " + str(P1Val) + " points.")
+        self.player_one.show_hand()
+        print("Player 1's hand is worth " + str(p1_val) + " points.")
         print("Player 2's hand is: ")
-        player_two.showHand()
-        print("Player 2's hand is worth " + str(P2Val) + " points.")
-        if P1Val > P2Val:
+        self.player_two.show_hand()
+        print("Player 2's hand is worth " + str(p2_val) + " points.")
+        if p1_val > p2_val:
             print("Player 1 wins!")
-        elif P1Val < P2Val:
+        elif p1_val < p2_val:
             print("Player 2 wins!")
         else:
             print("It's a tie!")
 
 def main():
     game = Game()
-    game.playGame()
+    game.play_game()
 
 if __name__ == '__main__':
     main()
